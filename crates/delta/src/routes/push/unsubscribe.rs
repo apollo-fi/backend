@@ -1,11 +1,14 @@
-use revolt_quark::{EmptyResponse, Error, Result, Session};
+use revolt_quark::{
+    models::{Session, WebPushSubscription},
+    EmptyResponse, Error, Result,
+};
 
 use rocket::State;
 
 /// # Unsubscribe
 ///
 /// Remove the Web Push subscription associated with the current session.
-#[openapi(tag = "Web Push")]
+#[openapi(skip)]
 #[post("/unsubscribe")]
 pub async fn req(/*rauth: &State<RAuth>, */ mut session: Session) -> Result<EmptyResponse> {
     /* TODO

@@ -19,7 +19,7 @@ pub struct DataOnboard {
 /// # Complete Onboarding
 ///
 /// This sets a new username, completes onboarding and allows a user to start using Revolt.
-#[openapi(tag = "Onboarding")]
+#[openapi(skip)]
 #[post("/complete", data = "<data>")]
 pub async fn req(
     db: &State<Database>,

@@ -19,7 +19,6 @@ pub struct DataChangeUsername {
 #[patch("/@me/username", data = "<data>")]
 pub async fn req(
     db: &State<Database>,
-    account: Account,
     mut user: User,
     data: Json<DataChangeUsername>,
 ) -> Result<Json<User>> {

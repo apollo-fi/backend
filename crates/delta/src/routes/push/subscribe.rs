@@ -1,4 +1,7 @@
-use revolt_quark::{EmptyResponse, Error, Result, Session, WebPushSubscription};
+use revolt_quark::{
+    models::{Session, WebPushSubscription},
+    EmptyResponse, Error, Result,
+};
 
 use rocket::{serde::json::Json, State};
 
@@ -7,10 +10,10 @@ use rocket::{serde::json::Json, State};
 /// Create a new Web Push subscription.
 ///
 /// If an existing subscription exists on this session, it will be removed.
-#[openapi(tag = "Web Push")]
+#[openapi(skip)]
 #[post("/subscribe", data = "<data>")]
 pub async fn req(
-    //rauth: &State<RAuth>, // TODO
+    /*rauth: &State<RAuth>,*/ // TODO
     mut session: Session,
     data: Json<WebPushSubscription>,
 ) -> Result<EmptyResponse> {
