@@ -1,5 +1,4 @@
 use okapi::openapi3::{SecurityScheme, SecuritySchemeData};
-use rauth::models::Session;
 use rocket_okapi::gen::OpenApiGenerator;
 use rocket_okapi::request::{OpenApiFromRequest, RequestHeaderInput};
 
@@ -7,12 +6,47 @@ use rocket::http::Status;
 use rocket::request::{self, FromRequest, Outcome, Request};
 
 use crate::models::user::UserHint;
+use crate::models::Session;
 use crate::models::User;
-use crate::Database;
+use crate::{Database, Error};
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for Session {
+    type Error = Error;
+
+    #[allow(clippy::collapsible_match)]
+    async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
+        let session: &Option<Session> = request
+            .local_cache_async(async {
+                let db = request.rocket().state::<Database>().expect("`Database`");
+
+                let header_session_token = request
+                    .headers()
+                    .get("x-session-token")
+                    .next()
+                    .map(|x| x.to_string());
+
+                if let Some(token) = header_session_token {
+                    if let Ok(session) = db.find_session_by_token(&token).await {
+                        return Some(session);
+                    }
+                }
+
+                None
+            })
+            .await;
+
+        if let Some(session) = session {
+            Outcome::Success(session.clone())
+        } else {
+            Outcome::Failure((Status::Unauthorized, Error::InvalidSession))
+        }
+    }
+}
 
 #[rocket::async_trait]
 impl<'r> FromRequest<'r> for User {
-    type Error = rauth::Error;
+    type Error = Error;
 
     async fn from_request(request: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         let user: &Option<User> = request
@@ -43,7 +77,7 @@ impl<'r> FromRequest<'r> for User {
         if let Some(user) = user {
             Outcome::Success(user.clone())
         } else {
-            Outcome::Failure((Status::Unauthorized, rauth::Error::InvalidSession))
+            Outcome::Failure((Status::Unauthorized, Error::InvalidSession))
         }
     }
 }

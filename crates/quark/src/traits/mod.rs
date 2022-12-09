@@ -26,6 +26,10 @@ mod users {
     pub mod user_settings;
 }
 
+mod sessions {
+    pub mod session;
+}
+
 pub use admin::migrations::AbstractMigrations;
 
 pub use media::attachment::AbstractAttachment;
@@ -44,6 +48,8 @@ pub use users::bot::AbstractBot;
 pub use users::user::AbstractUser;
 pub use users::user_settings::AbstractUserSettings;
 
+pub use sessions::session::AbstractSession;
+
 pub trait AbstractDatabase:
     Sync
     + Send
@@ -60,5 +66,6 @@ pub trait AbstractDatabase:
     + AbstractBot
     + AbstractUser
     + AbstractUserSettings
+    + AbstractSession
 {
 }

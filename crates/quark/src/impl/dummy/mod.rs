@@ -28,6 +28,10 @@ pub mod users {
     pub mod user_settings;
 }
 
+pub mod sessions {
+    pub mod session;
+}
+
 #[derive(Debug, Clone)]
 pub struct DummyDb;
 

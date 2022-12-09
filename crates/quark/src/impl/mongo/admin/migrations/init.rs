@@ -61,6 +61,10 @@ pub async fn create_database(db: &MongoDb) {
         .await
         .expect("Failed to create bots collection.");
 
+    db.create_collection("sessions", None)
+        .await
+        .expect("Failed to create sessions collection.");
+
     db.create_collection(
         "pubsub",
         CreateCollectionOptions::builder()
@@ -170,6 +174,30 @@ pub async fn create_database(db: &MongoDb) {
     )
     .await
     .expect("Failed to create server_members index.");
+
+    db.run_command(
+        doc! {
+            "createIndexes": "sessions",
+            "indexes": [
+                {
+                    "key": {
+                        "token": 1
+                    },
+                    "name": "token",
+                    "unique": true
+                },
+                {
+                    "key": {
+                        "user_id": 1
+                    },
+                    "name": "user_id"
+                }
+            ]
+        },
+        None,
+    )
+    .await
+    .unwrap();
 
     db.collection("migrations")
         .insert_one(

@@ -1,4 +1,4 @@
-use revolt_quark::{models::User, rauth::models::Session};
+use revolt_quark::models::{Session, User};
 use rocket::serde::json::Json;
 use serde::Serialize;
 

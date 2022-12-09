@@ -60,14 +60,3 @@ impl Deref for Database {
         }
     }
 }
-
-impl From<Database> for rauth::Database {
-    fn from(val: Database) -> Self {
-        match val {
-            Database::Dummy(_) => rauth::Database::default(),
-            Database::MongoDb(MongoDb(client)) => {
-                rauth::Database::MongoDb(rauth::database::MongoDb(client.database("revolt")))
-            }
-        }
-    }
-}

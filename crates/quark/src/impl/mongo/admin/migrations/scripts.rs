@@ -601,49 +601,49 @@ pub async fn run_migrations(db: &MongoDb, revision: i32) -> i32 {
             .await
             .unwrap();
     }
+    /*
+       if revision <= 15 {
+           info!("Running migration [revision 15 / 04-06-2022]: Migrate rAuth to latest version.");
 
-    if revision <= 15 {
-        info!("Running migration [revision 15 / 04-06-2022]: Migrate rAuth to latest version.");
+           let db = rauth::Database::MongoDb(rauth::database::MongoDb(db.db()));
+           db.run_migration(rauth::Migration::M2022_06_03EnsureUpToSpec)
+               .await
+               .unwrap();
+       }
 
-        let db = rauth::Database::MongoDb(rauth::database::MongoDb(db.db()));
-        db.run_migration(rauth::Migration::M2022_06_03EnsureUpToSpec)
-            .await
-            .unwrap();
-    }
+       if revision <= 16 {
+           info!("Running migration [revision 16 / 07-07-2022]: Add `emojis` collection and rAuth migration.");
 
-    if revision <= 16 {
-        info!("Running migration [revision 16 / 07-07-2022]: Add `emojis` collection and rAuth migration.");
+           let rauth_db = rauth::Database::MongoDb(rauth::database::MongoDb(db.db()));
+           rauth_db
+               .run_migration(rauth::Migration::M2022_06_09AddIndexForDeletion)
+               .await
+               .unwrap();
 
-        let rauth_db = rauth::Database::MongoDb(rauth::database::MongoDb(db.db()));
-        rauth_db
-            .run_migration(rauth::Migration::M2022_06_09AddIndexForDeletion)
-            .await
-            .unwrap();
+           db.db()
+               .create_collection("emojis", None)
+               .await
+               .expect("Failed to create emojis collection.");
 
-        db.db()
-            .create_collection("emojis", None)
-            .await
-            .expect("Failed to create emojis collection.");
-
-        db.db()
-            .run_command(
-                doc! {
-                    "createIndexes": "emojis",
-                    "indexes": [
-                        {
-                            "key": {
-                                "parent.id": 1_i32,
-                            },
-                            "name": "parent_id"
-                        }
-                    ]
-                },
-                None,
-            )
-            .await
-            .expect("Failed to create emoji parent index.");
-    }
-
+           db.db()
+               .run_command(
+                   doc! {
+                       "createIndexes": "emojis",
+                       "indexes": [
+                           {
+                               "key": {
+                                   "parent.id": 1_i32,
+                               },
+                               "name": "parent_id"
+                           }
+                       ]
+                   },
+                   None,
+               )
+               .await
+               .expect("Failed to create emoji parent index.");
+       }
+    */
     if revision <= 17 {
         info!("Running migration [revision 17 / 15-07-2022]: Initialise `joined_at` property on server members.");
 
