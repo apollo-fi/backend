@@ -1,6 +1,6 @@
 use revolt_quark::{
     models::{Session, WebPushSubscription},
-    EmptyResponse, Error, Result,
+    Database, EmptyResponse, Error, Result,
 };
 
 use rocket::State;
@@ -10,17 +10,13 @@ use rocket::State;
 /// Remove the Web Push subscription associated with the current session.
 #[openapi(skip)]
 #[post("/unsubscribe")]
-pub async fn req(/*rauth: &State<RAuth>, */ mut session: Session) -> Result<EmptyResponse> {
-    /* TODO
+pub async fn req(db: &State<Database>, mut session: Session) -> Result<EmptyResponse> {
     session.subscription = None;
-    session
-        .save(&rauth)
+    db.save_session(&session)
         .await
         .map(|_| EmptyResponse)
         .map_err(|_| Error::DatabaseError {
             operation: "save",
             with: "session",
         })
-        */
-    Ok(EmptyResponse)
 }

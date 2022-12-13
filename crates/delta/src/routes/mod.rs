@@ -11,6 +11,7 @@ mod onboard;
 mod push;
 mod root;
 mod servers;
+mod sessions;
 mod sync;
 mod users;
 
@@ -33,6 +34,7 @@ pub fn mount(mut rocket: Rocket<Build>) -> Rocket<Build> {
         "/onboard" => onboard::routes(),
         "/push" => push::routes(),
         "/sync" => sync::routes(),
+        "/session" => sessions::routes()
     };
 
     rocket

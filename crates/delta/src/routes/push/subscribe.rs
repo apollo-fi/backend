@@ -1,6 +1,6 @@
 use revolt_quark::{
     models::{Session, WebPushSubscription},
-    EmptyResponse, Error, Result,
+    Database, EmptyResponse, Error, Result,
 };
 
 use rocket::{serde::json::Json, State};
@@ -13,20 +13,16 @@ use rocket::{serde::json::Json, State};
 #[openapi(skip)]
 #[post("/subscribe", data = "<data>")]
 pub async fn req(
-    /*rauth: &State<RAuth>,*/ // TODO
+    db: &State<Database>,
     mut session: Session,
     data: Json<WebPushSubscription>,
 ) -> Result<EmptyResponse> {
-    /*
     session.subscription = Some(data.into_inner());
-    session
-        .save(&rauth)
+    db.save_session(&session)
         .await
         .map(|_| EmptyResponse)
         .map_err(|_| Error::DatabaseError {
             operation: "save",
             with: "session",
         })
-        */
-    Ok(EmptyResponse)
 }

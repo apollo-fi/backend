@@ -1,4 +1,4 @@
-use revolt_quark::{Database, Error, Result, Session};
+use revolt_quark::{models::Session, Database, Error, Result};
 use rocket::{serde::json::Json, State};
 use serde::{Deserialize, Serialize};
 use validator::Validate;
@@ -19,7 +19,6 @@ struct Token {
 }
 
 #[derive(Validate, Serialize, Deserialize, JsonSchema)]
-#[serde(untagged)]
 pub struct DataLogin {
     #[validate(length(min = 8, max = 1024))]
     jwt: String,
@@ -31,7 +30,7 @@ pub struct ResponseLogin {
     token: String,
 }
 
-#[openapi(tag = "Session")]
+#[openapi(skip)]
 #[post("/login", data = "<data>")]
 pub async fn req(db: &State<Database>, data: Json<DataLogin>) -> Result<Json<ResponseLogin>> {
     let data = data.into_inner();
@@ -39,16 +38,17 @@ pub async fn req(db: &State<Database>, data: Json<DataLogin>) -> Result<Json<Res
         .map_err(|error| Error::FailedValidation { error })?;
 
     let ret = decode::<Token>(
-        &token,
+        &data.jwt,
         &DecodingKey::from_secret("rZ-A+nq!f".as_ref()),
         &Validation::default(),
-    )?;
+    )
+    .map_err(|_| Error::InvalidOperation)?;
 
     let session = Session {
         id: ulid::Ulid::new().to_string(),
         token: nanoid!(64),
         user_id: ret.claims.address,
-        name: ret.claims.usename,
+        name: ret.claims.username,
         subscription: None,
     };
 

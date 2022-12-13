@@ -6,6 +6,8 @@ extern crate rocket_okapi;
 extern crate serde_json;
 #[macro_use]
 extern crate lazy_static;
+#[macro_use]
+extern crate nanoid;
 
 pub mod routes;
 pub mod util;
