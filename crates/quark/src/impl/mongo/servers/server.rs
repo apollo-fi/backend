@@ -3,6 +3,7 @@ use bson::{to_document, Bson, Document};
 use crate::models::server::{FieldsRole, FieldsServer, PartialRole, PartialServer, Role, Server};
 use crate::r#impl::mongo::IntoDocumentPath;
 use crate::{AbstractServer, Database, Error, Result};
+use mongodb::options::FindOptions;
 
 use super::super::MongoDb;
 
@@ -90,6 +91,40 @@ impl AbstractServer for MongoDb {
                     "$in": ids
                 }
             },
+        )
+        .await
+    }
+
+    async fn list_servers(
+        &self,
+        skip: Option<u64>,
+        limit: Option<i64>,
+        query: Option<String>,
+    ) -> Result<Vec<Server>> {
+        let limit = limit.unwrap_or(10);
+        let skip = skip.unwrap_or(0);
+
+        let mut filter = doc! {};
+
+        if let Some(query) = query {
+            filter.insert(
+                "$text",
+                doc! {
+                    "$search": query
+                },
+            );
+        }
+
+        self.find_with_options(
+            COL,
+            filter,
+            FindOptions::builder()
+                .limit(limit)
+                .skip(skip)
+                .sort(doc! {
+                    "member_count": -1_i32
+                })
+                .build(),
         )
         .await
     }
@@ -229,6 +264,10 @@ impl IntoDocumentPath for FieldsServer {
             FieldsServer::Description => "description",
             FieldsServer::Icon => "icon",
             FieldsServer::SystemMessages => "system_messages",
+            FieldsServer::ContractAddress => "contract_address",
+            FieldsServer::Twitter => "twitter",
+            FieldsServer::WebSite => "website",
+            FieldsServer::Email => "email",
         })
     }
 }

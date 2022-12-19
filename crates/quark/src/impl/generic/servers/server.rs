@@ -146,6 +146,10 @@ impl Server {
             FieldsServer::SystemMessages => self.system_messages = None,
             FieldsServer::Icon => self.icon = None,
             FieldsServer::Banner => self.banner = None,
+            FieldsServer::ContractAddress => self.contract_address = None,
+            FieldsServer::Email => self.email = None,
+            FieldsServer::Twitter => self.twitter = None,
+            FieldsServer::WebSite => self.website = None,
         }
     }
 
@@ -196,6 +200,7 @@ impl Server {
             avatar: None,
             roles: vec![],
             timeout: None,
+            header: None,
         };
 
         db.insert_member(&member).await?;

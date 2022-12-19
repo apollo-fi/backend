@@ -9,6 +9,13 @@ pub trait AbstractServer: Sync + Send {
     /// Fetch a servers by their ids
     async fn fetch_servers<'a>(&self, ids: &'a [String]) -> Result<Vec<Server>>;
 
+    async fn list_servers(
+        &self,
+        skip: Option<u64>,
+        limit: Option<i64>,
+        query: Option<String>,
+    ) -> Result<Vec<Server>>;
+
     /// Insert a new server into database
     async fn insert_server(&self, server: &Server) -> Result<()>;
 

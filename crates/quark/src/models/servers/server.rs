@@ -88,6 +88,21 @@ pub struct Server {
 
     /// Name of the server
     pub name: String,
+
+    pub server_type: String,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub website: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub twitter: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub email: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub contract_address: Option<String>,
+
     /// Description for the server
     #[serde(skip_serializing_if = "Option::is_none")]
     pub description: Option<String>,
@@ -110,6 +125,9 @@ pub struct Server {
     pub roles: HashMap<String, Role>,
     /// Default set of server and channel permissions
     pub default_permissions: i64,
+
+    // Member count
+    pub member_count: usize,
 
     /// Icon attachment
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -141,6 +159,10 @@ pub enum FieldsServer {
     SystemMessages,
     Icon,
     Banner,
+    ContractAddress,
+    Twitter,
+    Email,
+    WebSite,
 }
 
 /// Optional fields on server object

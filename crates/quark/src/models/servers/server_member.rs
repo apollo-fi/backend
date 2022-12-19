@@ -2,6 +2,7 @@ use iso8601_timestamp::Timestamp;
 use serde::{Deserialize, Serialize};
 
 use crate::models::attachment::File;
+use crate::models::nft::NFT;
 
 /// Composite primary key consisting of server and user id
 #[derive(Serialize, Deserialize, JsonSchema, Debug, Clone, Default)]
@@ -39,6 +40,9 @@ pub struct Member {
     /// Timestamp this member is timed out until
     #[serde(skip_serializing_if = "Option::is_none")]
     pub timeout: Option<Timestamp>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub header: Option<NFT>,
 }
 
 /// Optional fields on server member object
@@ -48,6 +52,7 @@ pub enum FieldsMember {
     Avatar,
     Roles,
     Timeout,
+    Header,
 }
 
 /// Member removal intention

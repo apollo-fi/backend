@@ -28,10 +28,27 @@ impl AbstractServer for DummyDb {
             nsfw: false,
             analytics: true,
             discoverable: true,
+
+            member_count: 0,
+            server_type: "collection".into(),
+
+            contract_address: Some("0x123456".into()),
+            email: Some("abc@gmail".into()),
+            twitter: Some("twitter".into()),
+            website: Some("website".into()),
         })
     }
 
     async fn fetch_servers<'a>(&self, _ids: &'a [String]) -> Result<Vec<Server>> {
+        Ok(vec![self.fetch_server("sus").await.unwrap()])
+    }
+
+    async fn list_servers(
+        &self,
+        _skip: Option<u64>,
+        _limit: Option<i64>,
+        _query: Option<String>,
+    ) -> Result<Vec<Server>> {
         Ok(vec![self.fetch_server("sus").await.unwrap()])
     }
 

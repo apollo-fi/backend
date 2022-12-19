@@ -6,6 +6,7 @@ mod admin {
 mod media {
     pub mod attachment;
     pub mod emoji;
+    pub mod nft;
 }
 
 mod channels {
@@ -46,6 +47,7 @@ pub use channel_unread::ChannelUnread;
 pub use emoji::Emoji;
 pub use message::Message;
 pub use migrations::MigrationInfo;
+pub use nft::NFT;
 pub use server::Server;
 pub use server_ban::ServerBan;
 pub use server_member::Member;

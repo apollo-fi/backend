@@ -99,6 +99,23 @@ pub async fn create_database(db: &MongoDb) {
 
     db.run_command(
         doc! {
+            "createIndexes": "servers",
+            "indexes": [
+                {
+                    "key": {
+                        "name": "text"
+                    },
+                    "name": "name"
+                }
+            ]
+        },
+        None,
+    )
+    .await
+    .expect("Faild to create server index.");
+
+    db.run_command(
+        doc! {
             "createIndexes": "messages",
             "indexes": [
                 {

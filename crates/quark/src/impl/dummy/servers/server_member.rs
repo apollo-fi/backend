@@ -18,6 +18,7 @@ impl AbstractServerMember for DummyDb {
             avatar: None,
             roles: vec![],
             timeout: None,
+            header: None,
         })
     }
 

@@ -65,6 +65,7 @@ impl Member {
             FieldsMember::Nickname => self.nickname = None,
             FieldsMember::Roles => self.roles.clear(),
             FieldsMember::Timeout => self.timeout = None,
+            FieldsMember::Header => self.header = None,
         }
     }
 }
